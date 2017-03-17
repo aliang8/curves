@@ -3,25 +3,27 @@ from matrix import *
 import math
 
 def add_circle( points, cx, cy, cz, r, step ):
-    x0 = 0
-    y0 = 0
+    x0 = r * math.cos(0) + cx
+    y0 = r * math.sin(0) + cy
     t = 0
-    while t < 1.0001: 
+    while t < 1.0001:
+        t += step
         x1 = r * math.cos(2*math.pi*t) + cx
         y1 = r * math.sin(2*math.pi*t) + cy
-
         add_edge(points,x0,y0,cz,x1,y1,cz)
 
         x0 = x1
         y0 = y1
-        t += step
 
 def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
     t = 0
     if curve_type == 'hermite':
-        x_coef = generate_curve_coefs(x0,x1,x2,x3,'hermite')
-        y_coef = generate_curve_coefs(y0,y1,y2,y3,'hermite')
-        while t < 1.0001:
+        x_coef = generate_curve_coefs(x0,x1,x2,x3,'hermite')[0]
+        y_coef = generate_curve_coefs(y0,y1,y2,y3,'hermite')[0]
+    elif curve_type == 'bezier':
+        x_coef = generate_curve_coefs(x0,x1,x2,x3,'bezier')[0]
+        y_coef = generate_curve_coefs(y0,y1,y2,y3,'bezier')[0]
+    while t < 1.0001:
             x1 = x_coef[0]*t**3 + x_coef[1]*t**2 + x_coef[2]*t + x_coef[3]
             y1 = y_coef[0]*t**3 + y_coef[1]*t**2 + y_coef[2]*t + y_coef[3]
 
@@ -30,13 +32,6 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
             x0 = x1
             y0 = y1
             t += step
-    elif curve_type == 'bezier':
-        x_coef = generate_curve_coefs(x0,x1,x2,x3,'bezier')
-        y_coef = generate_curve_coefs(y0,y1,y2,y3,'bezier')
-        while
-
-
-
 
 def draw_lines( matrix, screen, color ):
     if len(matrix) < 2:
